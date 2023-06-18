@@ -1,4 +1,4 @@
-ESX = nil TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
+local ESX = exports["es_extended"]:getSharedObject()
 
 local TrackingSystem = {}
 
@@ -56,8 +56,7 @@ RegisterCommand("trackoff", function(source)
 
 end)
 
-RegisterNetEvent("AR-Tracker:PlayerJoined")
-AddEventHandler("AR-Tracker:PlayerJoined", function()
+RegisterNetEvent("AR-Tracker:PlayerJoined", function()
     local Source = source
     if TrackingSystem[Source] then return end
 

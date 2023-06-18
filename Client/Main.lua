@@ -1,4 +1,4 @@
-ESX = nil Citizen.CreateThread(function() while ESX == nil do TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end) Citizen.Wait(0) end end)
+local ESX = exports["es_extended"]:getSharedObject()
 
 local Config = nil
 local TrackingList = nil
@@ -42,13 +42,11 @@ RefreshBlip = function(Source, Settings)
 
 end
 
-RegisterNetEvent("AR-Tracker:AddTrack")
-AddEventHandler("AR-Tracker:AddTrack", function(Source, Data)
+RegisterNetEvent("AR-Tracker:AddTrack", function(Source, Data)
     TrackingList[Source] = Data
 end)
 
-RegisterNetEvent("AR-Tracker:RemoveTrack")
-AddEventHandler("AR-Tracker:RemoveTrack", function(Source, track)
+RegisterNetEvent("AR-Tracker:RemoveTrack", function(Source, track)
     TrackingList[Source].Tracker = false
 
     for k, v in pairs(Blips) do
@@ -67,39 +65,15 @@ AddEventHandler("AR-Tracker:RemoveTrack", function(Source, track)
     end
 end)
 
-RegisterNetEvent("AR-Tracker:GiveTrackList")
-AddEventHandler("AR-Tracker:GiveTrackList", function(List)
+RegisterNetEvent("AR-Tracker:GiveTrackList", function(List)
     while not Config do
         Wait(1100)
     end
 
     TrackingList = List
-
-    local CurrentPedID = GetPlayerServerId(PlayerId())
-
-    if not TrackingList[CurrentPedID].Tracker then
-        return
-    end
-
-    local Jobs = Config["Jobs"][TrackingList[CurrentPedID].Job]
-    if Jobs then
-
-        for k, v in pairs(TrackingList) do
-            if (Jobs[v.Job] == "true" and v.Tracker) or (Jobs[v.Job] == "false") and AR.Settings["blip"][v.Job] then
-                local Settings = AR.Settings["blip"][v.Job](GetPlayerPed(GetPlayerFromServerId(k)))
-
-                if Settings then
-                    RefreshBlip(k, Settings)
-                end
-
-            end
-        end
-
-    end
 end)
 
-RegisterNetEvent('esx:setJob')
-AddEventHandler('esx:setJob', function(job)
+RegisterNetEvent('esx:setJob', function(job)
     if ESX.PlayerData.job == job then
         return
     end
@@ -132,12 +106,16 @@ Citizen.CreateThread(function()
         if Jobs and TrackingList[CurrentPedID].Tracker then
 
             for k, v in pairs(TrackingList) do
+
                 if (Jobs[v.Job] == "true" and v.Tracker) or (Jobs[v.Job] == "false") and AR.Settings["blip"][v.Job] then
                     local Settings = AR.Settings["blip"][v.Job](GetPlayerPed(GetPlayerFromServerId(k)))
+
                     if Settings then
                         RefreshBlip(k, Settings)
                     end
+
                 end
+
             end
 
         end
