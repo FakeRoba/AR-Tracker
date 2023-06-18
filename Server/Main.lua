@@ -1,5 +1,3 @@
-local ESX = exports["es_extended"]:getSharedObject()
-
 local TrackingSystem = {}
 
 IsJobOnConfig = function(Job)
