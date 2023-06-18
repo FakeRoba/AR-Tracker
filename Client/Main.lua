@@ -82,7 +82,7 @@ RegisterNetEvent('esx:setJob', function(job)
     ExecuteCommand("trackoff")
 end)
 
-Citizen.CreateThread(function()
+CreateThread(function()
     TriggerServerEvent("AR-Tracker:PlayerJoined")
 
     while not ESX do
@@ -120,6 +120,6 @@ Citizen.CreateThread(function()
 
         end
 
-        Citizen.Wait(1100)
+        Wait(1100)
     end
 end)
