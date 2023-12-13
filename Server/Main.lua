@@ -58,7 +58,13 @@ RegisterNetEvent("AR-Tracker:PlayerJoined", function()
     local Source = source
     if TrackingSystem[Source] then return end
 
-    local Identity = GetIdentity(Source)
+    local Identity = nil
+
+    repeat
+        Identity = GetIdentity(Source)
+        Wait(4000)
+    until Identity
+
     local xPlayer = nil
 
     repeat
