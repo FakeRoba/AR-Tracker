@@ -11,13 +11,13 @@ IsJobOnConfig = function(Job)
 end
 
 function GetIdentity(source)
-	local identifier = GetPlayerIdentifiers(source)[1]
+	local identifier = ESX.GetPlayerFromId(source).identifier
 
-    local response = MySQL.query.await('SELECT * FROM `users` WHERE `identifier` = ?', {
+    local response = MySQL.query.await('SELECT firstname, lastname FROM users WHERE identifier = ?', {
         identifier
     })
 
-    if response[1]['firstname'] ~= nil then
+    if response and response[1] and response[1]['firstname'] ~= nil then
 
         local data = {
             firstname	= response[1]['firstname'],
@@ -28,6 +28,39 @@ function GetIdentity(source)
     end
 end
 
+AddEventHandler('esx:setJob', function(source, job, lastJob)
+    job = job.name
+    lastJob = lastJob.name
+    if job == lastJob then
+        return
+    end
+
+    TrackingSystem[source].Job = job
+
+    if not IsJobOnConfig(job) then
+        if TrackingSystem[source].Tracker then
+            TrackingSystem[source].Tracker = false
+
+            for k, v in pairs(TrackingSystem) do
+                TriggerClientEvent("AR-Tracker:RemoveTrack", k, source, true)
+            end
+        end
+
+        return
+    end
+
+    local AlreadyOnTrack = TrackingSystem[source].Tracker
+
+    if not AlreadyOnTrack and SAR.Settings.AutomaticTrackOn[job] then
+        TrackingSystem[source].Tracker = true
+    end
+
+    if not AlreadyOnTrack and TrackingSystem[source].Tracker then
+        for k, v in pairs(TrackingSystem) do
+            TriggerClientEvent("AR-Tracker:AddTrack", k, source, TrackingSystem[source])
+        end
+    end
+end)
 
 RegisterCommand("trackon", function(source)
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -51,7 +84,6 @@ RegisterCommand("trackoff", function(source)
     for k, v in pairs(TrackingSystem) do
         TriggerClientEvent("AR-Tracker:RemoveTrack", k, source, true)
     end
-
 end)
 
 RegisterNetEvent("AR-Tracker:PlayerJoined", function()
@@ -62,7 +94,9 @@ RegisterNetEvent("AR-Tracker:PlayerJoined", function()
 
     repeat
         Identity = GetIdentity(Source)
-        Wait(4000)
+        if not Identity then
+            Wait(4000)
+        end
     until Identity
 
     local xPlayer = nil

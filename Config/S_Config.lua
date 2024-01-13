@@ -5,7 +5,6 @@ SAR.Settings = {
     TranslateJob = {
         ["police"] = "Poliisi",
         ["ambulance"] = "Ensihoito",
-        ["asianajaja"] = "Asianajaja"
     },
 
     ["Jobs"] = {
@@ -16,9 +15,6 @@ SAR.Settings = {
         ["ambulance"] = {
             ["ambulance"] = "true", -- Trackon
             ["police"] = "true", -- Trackon
-        },
-        ["asianajaja"] = {
-            ["asianajaja"] = "true", -- Trackon
         },
     },
 

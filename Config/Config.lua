@@ -77,17 +77,6 @@ AR.Settings = {
             return false
         end,
 
-        ["gang123"] = function(Ped)
-            return {
-                sprite = 1,
-                scale = 0.5,
-                color = 3,
-                display = 6,
-                category = 2,
-                cone = true,
-                indicator = false
-            }
-        end,
 
     }
 }

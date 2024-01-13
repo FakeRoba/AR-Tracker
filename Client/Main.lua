@@ -31,7 +31,7 @@ RefreshBlip = function(Source, Settings)
 
     Blips[Source] = Blip
 
-    Citizen.CreateThread(function()
+    CreateThread(function()
         while IsVehicleSirenOn(GetVehiclePedIsIn(GetPlayerPed(GetPlayerFromServerId(Source)))) do
             Wait(50)
         end
@@ -77,7 +77,6 @@ RegisterNetEvent('esx:setJob', function(job)
     end
 
 	ESX.PlayerData.job = job
-    ExecuteCommand("trackoff")
 end)
 
 CreateThread(function()
@@ -105,7 +104,8 @@ CreateThread(function()
 
             for k, v in pairs(TrackingList) do
 
-                if (Jobs[v.Job] == "true" and v.Tracker) or (Jobs[v.Job] == "false") and AR.Settings["blip"][v.Job] then
+                if (Jobs[v.Job] == "true" and v.Tracker) or
+                (Jobs[v.Job] == "false") and AR.Settings["blip"][v.Job] then
                     local Settings = AR.Settings["blip"][v.Job](GetPlayerPed(GetPlayerFromServerId(k)))
 
                     if Settings then
